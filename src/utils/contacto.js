@@ -1,6 +1,5 @@
-const PREFIJO_PAIS = '51'
-
 export function normalizarTelefono(telefono) {
+  const PREFIJO_PAIS = '51'
   const digitos = String(telefono).replace(/\D/g, '')
   if (digitos.startsWith(PREFIJO_PAIS)) return digitos
   return PREFIJO_PAIS + digitos.replace(/^0+/, '')
