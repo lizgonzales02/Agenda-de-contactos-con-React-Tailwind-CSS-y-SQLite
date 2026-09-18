@@ -2,15 +2,20 @@ import { useState, useEffect } from 'react'
 
 const VACIO = {
   nombre: '', apellido: '', telefono: '', email: '',
-  categoria: 'Personal', favorito: false, notas: ''
+  grupo_id: 1, favorito: false, notas: '', cumple: ''
 }
 
-export default function ContactoForm({ editando, onGuardar, onCancelar }) {
+export default function ContactoForm({ editando, onGuardar, onCancelar, grupos, onCrearGrupo }) {
   const [form, setForm] = useState(VACIO)
   const [fallos, setFallos] = useState({})
+  const [mostrarGrupo, setMostrarGrupo] = useState(false)
+  const [nuevoGrupo, setNuevoGrupo] = useState('')
+  const [colorGrupo, setColorGrupo] = useState('#64748b')
 
   useEffect(() => {
-    setForm(editando ? { ...editando, favorito: !!editando.favorito } : VACIO)
+    setForm(editando
+      ? { ...editando, favorito: !!editando.favorito, cumple: editando.cumple || '' }
+      : VACIO)
     setFallos({})
   }, [editando])
 
@@ -32,6 +37,13 @@ export default function ContactoForm({ editando, onGuardar, onCancelar }) {
   const enviar = () => {
     if (!validar()) return
     if (onGuardar(form)) setForm(VACIO)
+  }
+
+  const agregarGrupo = () => {
+    if (!nuevoGrupo.trim()) return
+    onCrearGrupo(nuevoGrupo, colorGrupo)
+    setNuevoGrupo('')
+    setMostrarGrupo(false)
   }
 
   const input = "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm " +
@@ -58,11 +70,30 @@ export default function ContactoForm({ editando, onGuardar, onCancelar }) {
 
         <input className={input} placeholder="Correo" value={form.email} onChange={cambiar('email')} />
 
-        <select className={input} value={form.categoria} onChange={cambiar('categoria')}>
-          {['Personal', 'Trabajo', 'SENATI', 'Familia'].map((c) =>
-            <option key={c} value={c}>{c}</option>
-          )}
-        </select>
+        <div className="flex gap-2">
+          <select className={input + ' flex-1'} value={form.grupo_id} onChange={cambiar('grupo_id')}>
+            {(grupos || []).map((g) =>
+              <option key={g.id} value={g.id}>{g.nombre}</option>
+            )}
+          </select>
+          <button type="button" onClick={() => setMostrarGrupo(!mostrarGrupo)}
+            className="shrink-0 rounded-lg border px-2 text-sm" title="Crear grupo">
+            +
+          </button>
+        </div>
+
+        {mostrarGrupo && (
+          <div className="flex gap-2">
+            <input className={input + ' flex-1'} placeholder="Nuevo grupo" value={nuevoGrupo}
+              onChange={(e) => setNuevoGrupo(e.target.value)} />
+            <input type="color" value={colorGrupo} onChange={(e) => setColorGrupo(e.target.value)}
+              className="h-9 w-9 cursor-pointer rounded border" />
+            <button onClick={agregarGrupo}
+              className="shrink-0 rounded-lg bg-green-600 px-3 py-1.5 text-xs text-white">OK</button>
+          </div>
+        )}
+
+        <input type="date" className={input} value={form.cumple} onChange={cambiar('cumple')} />
 
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={form.favorito} onChange={cambiar('favorito')} />
