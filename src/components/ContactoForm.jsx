@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 const VACIO = {
   nombre: '', apellido: '', telefono: '', email: '',
-  categoria: 'Personal', favorito: false, notas: ''
+  categoria: 'Personal', favorito: false, notas: '', cumple: ''
 }
 
 export default function ContactoForm({ editando, onGuardar, onCancelar }) {
@@ -10,7 +10,9 @@ export default function ContactoForm({ editando, onGuardar, onCancelar }) {
   const [fallos, setFallos] = useState({})
 
   useEffect(() => {
-    setForm(editando ? { ...editando, favorito: !!editando.favorito } : VACIO)
+    setForm(editando
+      ? { ...editando, favorito: !!editando.favorito, cumple: editando.cumple || '' }
+      : VACIO)
     setFallos({})
   }, [editando])
 
@@ -63,6 +65,8 @@ export default function ContactoForm({ editando, onGuardar, onCancelar }) {
             <option key={c} value={c}>{c}</option>
           )}
         </select>
+
+        <input type="date" className={input} value={form.cumple} onChange={cambiar('cumple')} />
 
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={form.favorito} onChange={cambiar('favorito')} />

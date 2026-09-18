@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS contactos (
               CHECK (categoria IN ('Personal','Trabajo','SENATI','Familia')),
   favorito  INTEGER NOT NULL DEFAULT 0 CHECK (favorito IN (0,1)),
   notas     TEXT,
+  cumple    TEXT,
   creado_en TEXT    NOT NULL DEFAULT (datetime('now','localtime'))
 );
 
