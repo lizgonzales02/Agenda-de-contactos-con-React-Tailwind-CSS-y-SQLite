@@ -1,5 +1,11 @@
 import { enlaceWhatsApp, compartirContacto, descargarVCard } from '../utils/contacto.js'
 
+function formatearFecha(fecha) {
+  if (!fecha) return ''
+  const [a, m, d] = fecha.split('-')
+  return `${d}/${m}/${a}`
+}
+
 export default function ContactoCard({ c, onEditar, onEliminar, onFavorito }) {
   const saludo = `Hola ${c.nombre}, te escribo desde mi agenda de contactos.`
   const iniciales = (c.nombre[0] + (c.apellido[0] ?? '')).toUpperCase()
@@ -14,9 +20,16 @@ export default function ContactoCard({ c, onEditar, onEliminar, onFavorito }) {
         <div className="min-w-0 flex-1">
           <h3 className="truncate font-semibold">{c.nombre} {c.apellido}</h3>
           <p className="text-sm text-slate-500">{c.telefono}</p>
-          <span className="mt-1 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-xs">
-            {c.categoria}
-          </span>
+          <div className="mt-1 flex flex-wrap items-center gap-2">
+            <span className="inline-block rounded-full bg-slate-100 px-2 py-0.5 text-xs">
+              {c.categoria}
+            </span>
+            {c.cumple && (
+              <span className="text-xs text-slate-400">
+                🎂 {formatearFecha(c.cumple)}
+              </span>
+            )}
+          </div>
         </div>
 
         <button onClick={() => onFavorito(c.id)} title="Favorito"

@@ -17,10 +17,10 @@ export function listarContactos({ texto = '', categoria = 'Todas' } = {}) {
 
 export function crearContacto(c) {
   obtenerDB().run(
-    `INSERT INTO contactos (nombre, apellido, telefono, email, categoria, favorito, notas)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO contactos (nombre, apellido, telefono, email, categoria, favorito, notas, cumple)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [c.nombre.trim(), c.apellido.trim(), c.telefono.trim(), c.email.trim(),
-     c.categoria, c.favorito ? 1 : 0, c.notas.trim()]
+     c.categoria, c.favorito ? 1 : 0, c.notas.trim(), c.cumple || null]
   )
   persistir()
 }
@@ -28,9 +28,9 @@ export function crearContacto(c) {
 export function actualizarContacto(id, c) {
   obtenerDB().run(
     `UPDATE contactos
-     SET nombre = ?, apellido = ?, telefono = ?, email = ?, categoria = ?, favorito = ?, notas = ?
+     SET nombre = ?, apellido = ?, telefono = ?, email = ?, categoria = ?, favorito = ?, notas = ?, cumple = ?
      WHERE id = ?`,
-    [c.nombre, c.apellido, c.telefono, c.email, c.categoria, c.favorito ? 1 : 0, c.notas, id]
+    [c.nombre, c.apellido, c.telefono, c.email, c.categoria, c.favorito ? 1 : 0, c.notas, c.cumple || null, id]
   )
   persistir()
 }
